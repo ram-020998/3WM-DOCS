@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installation Guide - MergeAssistant</title>
+    <meta name="description" content="Installation guide for MergeAssistant - Get up and running quickly.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #FAFAFC;
+            --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --text-primary: #0F0F16;
+            --text-secondary: #6C6C75;
+            --border-color: #DCDCE5;
+            --accent-primary: #6B6BF7;
+            --accent-secondary: #B561FF;
+            --accent-teal: #56ADC0;
+            --accent-orange: #FAA92F;
+            --green: #1CC101;
+            --red: #DE0037;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
+
+        /* Navigation */
+        .navbar { position: fixed; top: 0; width: 100%; padding: 1rem 2rem; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .logo-text { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-primary); }
+
+        /* Page Header */
+        .page-header { padding: 7rem 2rem 3rem; background: linear-gradient(135deg, rgba(28,193,1,0.08) 0%, rgba(86,173,192,0.05) 100%); text-align: center; }
+        .page-header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+        .page-header p { font-size: 1.125rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; }
+
+        /* Content */
+        .content-container { max-width: 900px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+        .section-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .intro-card { background: linear-gradient(135deg, rgba(28,193,1,0.05), rgba(86,173,192,0.05)); border: 1px solid rgba(28,193,1,0.2); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+        .intro-text { font-size: 1.0625rem; line-height: 1.8; margin: 0; }
+
+        /* Tables */
+        .install-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; background: var(--bg-primary); border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); }
+        .install-table th, .install-table td { padding: 0.875rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9375rem; }
+        .install-table th { background: rgba(107,107,247,0.08); font-weight: 600; color: var(--text-primary); }
+        .install-table tr:last-child td { border-bottom: none; }
+        .install-table tr:hover td { background: rgba(107,107,247,0.03); }
+        .install-table code { background: rgba(107,107,247,0.1); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.8125rem; color: var(--accent-primary); }
+
+        /* Code Blocks with Copy Button */
+        .code-block { position: relative; background: #1e1e2e; color: #cdd6f4; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 0.875rem; overflow: hidden; margin: 1rem 0; border: 1px solid #313244; }
+        .code-block-header { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem; background: #181825; border-bottom: 1px solid #313244; }
+        .code-block-lang { font-size: 0.75rem; color: #6c7086; text-transform: uppercase; letter-spacing: 0.5px; }
+        .copy-btn { display: flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.75rem; background: transparent; border: 1px solid #45475a; border-radius: 6px; color: #a6adc8; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+        .copy-btn:hover { background: #313244; border-color: #585b70; color: #cdd6f4; }
+        .copy-btn.copied { background: rgba(28,193,1,0.2); border-color: var(--green); color: var(--green); }
+        .copy-btn i { font-size: 0.75rem; }
+        .code-block-content { padding: 1rem 1.25rem; overflow-x: auto; }
+        .code-block code { background: none; padding: 0; color: inherit; display: block; white-space: pre; }
+        .terminal-output { background: #0d1117; color: #7ee787; padding: 1rem 1.25rem; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 0.8125rem; overflow-x: auto; margin: 1rem 0; border: 1px solid #30363d; white-space: pre-line; }
+
+        /* Steps */
+        .install-step { margin-bottom: 2rem; }
+        .install-step h4 { font-size: 1.125rem; font-weight: 600; margin: 0 0 0.75rem 0; display: flex; align-items: center; gap: 0.75rem; }
+        .install-step h4 .step-badge { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white; border-radius: 50%; font-size: 0.875rem; font-weight: 700; }
+        .install-step p { margin-bottom: 0.75rem; }
+
+        /* Notes */
+        .install-note { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1rem; background: rgba(250,169,47,0.1); border: 1px solid rgba(250,169,47,0.3); border-radius: 8px; font-size: 0.875rem; margin: 1rem 0; }
+        .install-note i { color: var(--accent-orange); margin-top: 2px; }
+        .install-note.info { background: rgba(107,107,247,0.1); border-color: rgba(107,107,247,0.3); }
+        .install-note.info i { color: var(--accent-primary); }
+
+        /* Command Grid */
+        .command-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1.5rem 0; }
+        .command-card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem 1.25rem; }
+        .command-card h5 { font-size: 0.9375rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+        .command-card code { display: block; background: rgba(107,107,247,0.1); padding: 0.5rem 0.75rem; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 0.8125rem; color: var(--accent-primary); margin-top: 0.5rem; }
+        .command-card p { font-size: 0.8125rem; color: var(--text-secondary); margin: 0; }
+
+        /* Section Headers */
+        h3.section-title { font-size: 1.25rem; font-weight: 600; margin: 2.5rem 0 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
+        h3.section-title:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+
+        /* Footer */
+        .footer { padding: 2rem; text-align: center; border-top: 1px solid var(--border-color); margin-top: 2rem; }
+        .footer p { color: var(--text-secondary); font-size: 0.875rem; margin: 0; }
+
+        /* Responsive */
+        @media (max-width: 768px) { 
+            .command-grid { grid-template-columns: 1fr; } 
+            .nav-links { display: none; }
+            .page-header h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 1024 1024" style="width:24px;height:24px;"><circle cx="512" cy="512" r="80" fill="white"/><line x1="512" y1="432" x2="512" y2="280" stroke="white" stroke-width="40" stroke-linecap="round"/><line x1="448" y1="568" x2="340" y2="676" stroke="white" stroke-width="40" stroke-linecap="round"/><line x1="576" y1="568" x2="684" y2="676" stroke="white" stroke-width="40" stroke-linecap="round"/></svg>
+            </div>
+            <span class="logo-text">MergeAssistant</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html#guide">User Guide</a>
+            <a href="index.html#faq">FAQ</a>
+            <a href="installation.html" class="active">Installation</a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <h1><i class="fas fa-download" style="margin-right:0.75rem;color:var(--green);"></i>Installation Guide</h1>
+        <p>Get MergeAssistant up and running on your system in minutes</p>
+    </header>
+
+    <!-- Content -->
+    <div class="content-container">
+        <div class="section-card">
+            <div class="intro-card">
+                <p class="intro-text">This guide outlines the necessary steps to install and run MergeAssistant. The application uses an automated setup that handles Python, virtual environments, and dependencies for you.</p>
+            </div>
+
+            <!-- Prerequisites -->
+            <h3 class="section-title">Prerequisites</h3>
+            <table class="install-table">
+                <tr><th>Requirement</th><th>Details</th></tr>
+                <tr><td>Operating System</td><td>macOS 10.15+, Windows 10/11, or Linux (Ubuntu 20.04+)</td></tr>
+                <tr><td>Disk Space</td><td>~500MB for application and dependencies</td></tr>
+                <tr><td>Memory</td><td>4GB RAM minimum (8GB recommended for large packages)</td></tr>
+                <tr><td>Network</td><td>Internet connection required for first-time setup</td></tr>
+                <tr><td>Git</td><td>Required to clone the repository</td></tr>
+            </table>
+
+            <div class="install-note">
+                <i class="fab fa-windows"></i>
+                <div><strong>Windows-Specific:</strong> The Windows application may require .NET Framework 4.6.2 or later. Most Windows 10/11 systems have this pre-installed. If you encounter startup errors, install <a href="https://dotnet.microsoft.com/download/dotnet-framework/net48" target="_blank" style="color:var(--accent-primary);">.NET Framework 4.8</a>.</div>
+            </div>
+
+            <!-- Installation Steps -->
+            <h3 class="section-title">Installation Steps</h3>
+
+            <div class="install-step">
+                <h4><span class="step-badge">1</span> Clone the Repository</h4>
+                <p>Open a terminal (macOS/Linux) or Command Prompt (Windows) and run:</p>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span class="code-block-lang">bash</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="code-block-content"><code>git clone git@github.com:ram-020998/3WM.git</code></div>
+                </div>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">2</span> Navigate to the Project Directory</h4>
+                <p>Change your current directory to the newly cloned project folder:</p>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span class="code-block-lang">bash</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="code-block-content"><code>cd 3WM</code></div>
+                </div>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">3</span> Make Scripts Executable (macOS/Linux Only)</h4>
+                <p>On macOS and Linux, ensure the startup scripts are executable. Windows users should skip this step.</p>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span class="code-block-lang">bash</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="code-block-content"><code>chmod +x 3wm.sh scripts/3wm.sh</code></div>
+                </div>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">4</span> Install Global Command</h4>
+                <p>To run <code>3wm</code> from any directory without navigating to the project folder:</p>
+                <table class="install-table">
+                    <tr><th>Platform</th><th>Command</th></tr>
+                    <tr><td>macOS / Linux</td><td><code>./3wm.sh install-cli</code></td></tr>
+                    <tr><td>Windows</td><td><code>3wm.bat install-cli</code></td></tr>
+                </table>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">5</span> Start the Application</h4>
+                <p>The application uses an automated setup script that handles Python, virtual environments, and dependency installation on the first run.</p>
+                <table class="install-table">
+                    <tr><th>Operating System</th><th>Command</th></tr>
+                    <tr><td>macOS / Linux</td><td><code>3wm start</code></td></tr>
+                    <tr><td>Windows</td><td><code>3wm start</code></td></tr>
+                </table>
+            </div>
+
+            <!-- First Run -->
+            <h3 class="section-title">What Happens During First Run</h3>
+            <p>The startup script will perform the following automated setup steps:</p>
+            <table class="install-table">
+                <tr><th>Step</th><th>Description</th><th>Time (Approx.)</th></tr>
+                <tr><td>1</td><td>Downloads uv package manager (~15MB)</td><td>~5 seconds</td></tr>
+                <tr><td>2</td><td>Installs Python 3.11 (if not present)</td><td>~10 seconds</td></tr>
+                <tr><td>3</td><td>Creates isolated virtual environment</td><td>~2 seconds</td></tr>
+                <tr><td>4</td><td>Installs all application dependencies</td><td>~15 seconds</td></tr>
+                <tr><td>5</td><td>Starts the Flask web server</td><td>~3 seconds</td></tr>
+            </table>
+            <p style="margin-top:0.5rem;"><strong>Total First-Run Time:</strong> 30-45 seconds</p>
+
+            <div class="install-note info">
+                <i class="fas fa-info-circle"></i>
+                <div>The uv package manager and Python installation are stored locally in the <code>.uv/</code> directory within the project folder, ensuring complete isolation from your system's global Python installations.</div>
+            </div>
+
+            <!-- Accessing the Application -->
+            <h3 class="section-title">Accessing the Application</h3>
+            <p>Once the application starts, you will see output similar to this:</p>
+            <div class="terminal-output">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Three-Way Merge Assistant
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+→ Starting application...
+✓ Open http://localhost:5000 in your browser
+* Running on http://0.0.0.0:5000</div>
+            <p>Open your web browser and navigate to: <a href="http://localhost:5000" style="color:var(--accent-primary);font-weight:600;">http://localhost:5000</a></p>
+
+            <!-- Available Commands -->
+            <h3 class="section-title">Available Commands</h3>
+            <p>The <code>3wm.sh</code> (macOS/Linux) or <code>3wm.bat</code> (Windows) script is your main interface for managing the application.</p>
+            <table class="install-table">
+                <tr><th>Command</th><th>Description</th><th>Example</th></tr>
+                <tr><td><code>start</code></td><td>Start the application (default)</td><td><code>3wm start</code></td></tr>
+                <tr><td><code>update</code></td><td>Pull latest code and update dependencies</td><td><code>3wm update</code></td></tr>
+                <tr><td><code>test</code></td><td>Run the test suite</td><td><code>3wm test</code></td></tr>
+                <tr><td><code>clean</code></td><td>Remove temporary files and caches</td><td><code>3wm clean</code></td></tr>
+                <tr><td><code>help</code></td><td>Display help information</td><td><code>3wm help</code></td></tr>
+            </table>
+
+            <div class="command-grid">
+                <div class="command-card">
+                    <h5>Start Application</h5>
+                    <p>Starts the web server</p>
+                    <code>3wm start</code>
+                </div>
+                <div class="command-card">
+                    <h5>Update Application</h5>
+                    <p>Pulls latest code and updates dependencies</p>
+                    <code>3wm update</code>
+                </div>
+                <div class="command-card">
+                    <h5>Run Tests</h5>
+                    <p>Runs all tests (use <code>-m unit</code> for unit tests only)</p>
+                    <code>3wm test</code>
+                </div>
+                <div class="command-card">
+                    <h5>Clean Files</h5>
+                    <p>Removes caches, build artifacts, and temp files</p>
+                    <code>3wm clean</code>
+                </div>
+            </div>
+
+            <!-- Stopping the Application -->
+            <h3 class="section-title">Stopping the Application</h3>
+            <p>To stop the running application, go back to the terminal window where the server is running and press:</p>
+            <table class="install-table">
+                <tr><th>Operating System</th><th>Key Combination</th></tr>
+                <tr><td>macOS / Linux</td><td><code>Ctrl + C</code></td></tr>
+                <tr><td>Windows</td><td><code>Ctrl + C</code></td></tr>
+            </table>
+
+            <!-- Troubleshooting -->
+            <h3 class="section-title">Troubleshooting</h3>
+            <table class="install-table">
+                <tr><th>Problem</th><th>Solution</th></tr>
+                <tr><td>"Permission denied" (macOS/Linux)</td><td>Run <code>chmod +x 3wm.sh scripts/3wm.sh</code> then try again.</td></tr>
+                <tr><td>"Port 5000 already in use"</td><td>Stop the application currently using port 5000, or modify the port in <code>app.py</code>.</td></tr>
+                <tr><td>".NET Framework" error (Windows)</td><td>Install <a href="https://dotnet.microsoft.com/download/dotnet-framework/net48" target="_blank" style="color:var(--accent-primary);">.NET Framework 4.8</a>.</td></tr>
+                <tr><td>Application crashes (large packages)</td><td>Close other memory-intensive programs, ensure 8GB RAM is available.</td></tr>
+            </table>
+
+            <div class="install-step" style="margin-top:1.5rem;">
+                <h4 style="color:var(--accent-orange);"><i class="fas fa-database" style="margin-right:0.5rem;"></i> Database Errors (SQLite)</h4>
+                <p>If you encounter SQLite database corruption or lock errors:</p>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span class="code-block-lang">bash</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="code-block-content"><code># Remove the database and restart (data will be lost)
+3wm reset-db</code></div>
+                </div>
+            </div>
+
+            <!-- Uninstalling -->
+            <h3 class="section-title">Uninstalling</h3>
+            <p>To completely remove the application and all associated data:</p>
+            <div class="code-block">
+                <div class="code-block-header">
+                    <span class="code-block-lang">bash</span>
+                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                </div>
+                <div class="code-block-content"><code>3wm uninstall</code></div>
+            </div>
+        </div>
+
+        <!-- AI Summary Setup Section -->
+        <div class="section-card" style="margin-top:1.5rem;">
+            <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border-color);">
+                <div style="width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;background:rgba(181,97,255,0.1);color:#B561FF;">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h2 style="font-size:1.5rem;font-weight:600;margin:0 0 0.25rem 0;">Setting up AI Summary</h2>
+                    <p style="font-size:0.875rem;color:var(--text-secondary);margin:0;">Configure native AI summarization using Appian's Summarizer AI agent</p>
+                </div>
+            </div>
+
+            <div class="intro-card" style="background:linear-gradient(135deg, rgba(181,97,255,0.05), rgba(107,107,247,0.05));border-color:rgba(181,97,255,0.2);">
+                <p class="intro-text">This section details the steps required to set up native AI summarization for the MergeAssistant application. This approach utilizes an Appian application package that includes a Summarizer AI agent exposed as a Web API service.</p>
+            </div>
+
+            <!-- Prerequisites -->
+            <h3 class="section-title" style="border-top:none;padding-top:0;margin-top:0;">Prerequisites</h3>
+            <div class="install-step">
+                <h4><span class="step-badge">1</span> Download the Appian Application Package</h4>
+                <p>Obtain the application package from the following Google Drive link:</p>
+                <p><a href="https://drive.google.com/drive/folders/1yDDIhUs7Z_prbD-hHX3qd3roMBnMlzHC?usp=sharing" target="_blank" style="color:var(--accent-primary);font-weight:600;"><i class="fas fa-external-link-alt" style="margin-right:0.5rem;"></i>Download from Google Drive</a></p>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">2</span> Import the Application</h4>
+                <p>Import the downloaded Appian application package into your target environment.</p>
+            </div>
+
+            <!-- Generating API Key -->
+            <h3 class="section-title">Generating the API Key for MergeAssist Communication</h3>
+            <p>Once the application is imported, follow these steps to generate the required API key for MergeAssist to communicate with the Summarizer AI agent:</p>
+
+            <div class="install-step" style="margin-top:1.5rem;">
+                <h4><span class="step-badge">1</span> Sign in as Admin</h4>
+                <p>In the environment where you have deployed the application, sign in as the admin user.</p>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">2</span> Navigate to Web API Authentication</h4>
+                <p>Navigate to the <strong>Admin Console</strong> and select <strong>Web API Authentication</strong>.</p>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">3</span> Create New API Key</h4>
+                <p>From the <strong>API Key</strong> tab, click <strong>CREATE</strong>.</p>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">4</span> Add Description</h4>
+                <p>In the <strong>Description</strong> field, add a unique description for the API key:</p>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span class="code-block-lang">text</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="code-block-content"><code>MergeAssist_AISummary_Key</code></div>
+                </div>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">5</span> Create Service Account</h4>
+                <p>Click the blue circle <strong>Plus icon</strong> next to the <strong>Service Account</strong> field to create a new service account.</p>
+                <table class="install-table">
+                    <tr><th>Field</th><th>Value</th></tr>
+                    <tr><td>Username</td><td><code>mergeassistant.ai.service</code></td></tr>
+                    <tr><td>Groups</td><td><code>TWM Administrators</code></td></tr>
+                </table>
+                <p>Click <strong>CREATE</strong> to apply the new service account to the API key.</p>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">6</span> Finalize and Save API Key</h4>
+                <p>Click <strong>CREATE</strong> to finalize the new API key.</p>
+                <div class="install-note">
+                    <i class="fas fa-key"></i>
+                    <div><strong>Important:</strong> Copy and securely save the generated API key. You will need it in the next section. This key cannot be retrieved later.</div>
+                </div>
+            </div>
+
+            <!-- Configuring in MergeAssist -->
+            <h3 class="section-title">Configuring AI Summary in MergeAssistant</h3>
+
+            <div class="install-step">
+                <h4><span class="step-badge">1</span> Open Settings</h4>
+                <p>Navigate to the <strong>Settings</strong> page in the MergeAssistant application.</p>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">2</span> Configure AI Features</h4>
+                <p>In the <strong>AI Features</strong> section:</p>
+                <table class="install-table">
+                    <tr><th>Setting</th><th>Value</th></tr>
+                    <tr><td>AI Summary generation</td><td>Turn <strong>ON</strong> the toggle</td></tr>
+                    <tr><td>AI Provider</td><td>Select <strong>Appian Merge Summary API</strong></td></tr>
+                    <tr><td>API Key</td><td>Paste the API key you copied in the previous steps</td></tr>
+                    <tr><td>API End Point</td><td>See format below</td></tr>
+                </table>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">3</span> Set API Endpoint</h4>
+                <p>For the <strong>API End Point</strong> field, use the following format, replacing <code>&lt;your-env-url&gt;</code> with the base URL of your Appian environment:</p>
+                <div class="code-block">
+                    <div class="code-block-header">
+                        <span class="code-block-lang">url</span>
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="code-block-content"><code>https://&lt;your-env-url&gt;/suite/webapi/generateChangeSummary</code></div>
+                </div>
+            </div>
+
+            <div class="install-step">
+                <h4><span class="step-badge">4</span> Test the Connection</h4>
+                <p>After saving the configuration, click on <strong>Test Provider</strong> to verify that the connection and configuration were successful.</p>
+                <div class="install-note info">
+                    <i class="fas fa-check-circle"></i>
+                    <div>A successful test will confirm that MergeAssistant can communicate with the Appian Summarizer AI agent and generate summaries for your merge changes.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 MergeAssistant. Built for Appian developers.</p>
+    </footer>
+
+    <script>
+        function copyCode(btn) {
+            const codeBlock = btn.closest('.code-block');
+            const code = codeBlock.querySelector('code').innerText;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+    </script>
+</body>
+</html>

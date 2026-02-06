@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MergeAssist - Intelligent Appian Package Merge Analysis</title>
+    <meta name="description" content="MergeAssist simplifies Appian application upgrades with intelligent three-way merge analysis.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #FAFAFC;
+            --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --text-primary: #0F0F16;
+            --text-secondary: #6C6C75;
+            --border-color: #DCDCE5;
+            --accent-primary: #6B6BF7;
+            --accent-secondary: #B561FF;
+            --accent-teal: #56ADC0;
+            --accent-orange: #FAA92F;
+            --green: #1CC101;
+            --red: #DE0037;
+            --green-1: #E3FBDF; --green-4: #117C00;
+            --red-1: #FFE7E7; --red-4: #9F0019;
+            --teal-1: #E2FAF9; --teal-4: #2C6770;
+            --orange-1: #FFEED3; --orange-4: #995C00;
+            --yellow-1: #FFF6C9; --yellow-4: #856C00;
+            --blue-1: #E9EDFC; --blue-3: #6B6BF7;
+            --purple-3: #B561FF; --pink-3: #E21496;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
+
+        /* Navigation */
+        .navbar { position: fixed; top: 0; width: 100%; padding: 1rem 2rem; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .logo-text { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--accent-primary); }
+
+        /* Hero */
+        .hero { min-height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8rem 2rem 4rem; background: linear-gradient(135deg, rgba(107,107,247,0.08) 0%, rgba(181,97,255,0.05) 100%); }
+        .hero-content { max-width: 900px; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(107,107,247,0.1); border: 1px solid rgba(107,107,247,0.3); border-radius: 50px; font-size: 0.875rem; color: var(--accent-primary); margin-bottom: 1.5rem; }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: var(--text-primary); }
+        .hero h1 span { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-subtitle { font-size: 1.25rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto 2rem; }
+        .btn-primary { padding: 1rem 2rem; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(107,107,247,0.3); color: white; }
+</style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#" class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 1024 1024" style="width:24px;height:24px;"><circle cx="512" cy="512" r="80" fill="white"/><line x1="512" y1="432" x2="512" y2="280" stroke="white" stroke-width="40" stroke-linecap="round"/><line x1="448" y1="568" x2="340" y2="676" stroke="white" stroke-width="40" stroke-linecap="round"/><line x1="576" y1="568" x2="684" y2="676" stroke="white" stroke-width="40" stroke-linecap="round"/></svg>
+            </div>
+            <span class="logo-text">MergeAssist</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html#guide">User Guide</a>
+            <a href="index.html#faq">FAQ</a>
+            <a href="installation.html">Installation</a>
+        </div>
+    </nav>
+</body>
+</html>
+
+<!-- Continuing styles in head -->
+<style>
+        /* Content Container */
+        .content-container { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+        
+        /* Quick Nav */
+        .quick-nav { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; position: sticky; top: 80px; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .quick-nav-title { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .quick-nav-title i { color: var(--accent-primary); }
+        .quick-nav-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .quick-nav-link { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-secondary); text-decoration: none; font-size: 0.8125rem; font-weight: 500; transition: all 0.2s; }
+        .quick-nav-link:hover { background: rgba(107,107,247,0.1); border-color: var(--accent-primary); color: var(--accent-primary); transform: translateY(-1px); }
+        .quick-nav-link i { font-size: 0.75rem; }
+
+        /* Section Styles */
+        .section-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .section-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
+        .section-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+        .section-icon.purple { background: rgba(107,107,247,0.1); color: var(--accent-primary); }
+        .section-icon.teal { background: rgba(86,173,192,0.1); color: var(--accent-teal); }
+        .section-icon.orange { background: rgba(250,169,47,0.1); color: var(--accent-orange); }
+        .section-icon.green { background: rgba(28,193,1,0.1); color: var(--green); }
+        .section-icon.pink { background: rgba(181,97,255,0.1); color: var(--accent-secondary); }
+        .section-icon.red { background: rgba(222,0,55,0.1); color: var(--red); }
+        .section-header h2 { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; }
+        .section-subtitle { font-size: 0.875rem; color: var(--text-secondary); margin: 0; }
+
+        /* Intro Card */
+        .intro-card { background: linear-gradient(135deg, rgba(107,107,247,0.05), rgba(181,97,255,0.05)); border: 1px solid rgba(107,107,247,0.2); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+        .intro-text { font-size: 1.0625rem; line-height: 1.8; margin: 0; }
+
+        /* Concept Grid */
+        .concept-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .concept-card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; text-align: center; transition: all 0.2s; }
+        .concept-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(107,107,247,0.1); }
+        .concept-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1rem; }
+        .concept-icon.package-a { background: rgba(107,107,247,0.1); color: var(--accent-primary); }
+        .concept-icon.package-b { background: rgba(86,173,192,0.1); color: var(--accent-teal); }
+        .concept-icon.package-c { background: rgba(28,193,1,0.1); color: var(--green); }
+        .concept-card h4 { font-size: 1.125rem; font-weight: 600; margin: 0 0 0.25rem 0; }
+        .concept-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 0.75rem; font-weight: 600; }
+        .concept-card p:last-child { font-size: 0.875rem; color: var(--text-secondary); margin: 0; }
+
+        /* Why Card */
+        .why-card { background: var(--bg-primary); border-left: 4px solid var(--accent-primary); border-radius: 0 8px 8px 0; padding: 1.25rem 1.5rem; }
+        .why-card h4 { display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; font-weight: 600; color: var(--accent-primary); margin: 0 0 0.75rem 0; }
+        .why-card p { margin: 0; font-size: 0.9375rem; }
+
+        /* Audience Grid */
+        .audience-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+        .audience-card { display: flex; gap: 1.25rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; transition: all 0.2s; }
+        .audience-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(107,107,247,0.1); }
+        .audience-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+        .audience-icon.leads { background: rgba(181,97,255,0.1); color: var(--accent-secondary); }
+        .audience-icon.developers { background: rgba(86,173,192,0.1); color: var(--accent-teal); }
+        .audience-content h4 { font-size: 1.125rem; font-weight: 600; margin: 0 0 0.25rem 0; }
+        .audience-role { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 0.75rem !important; font-weight: 600; }
+        .audience-content p { font-size: 0.9375rem; color: var(--text-secondary); margin-bottom: 1rem; }
+        .audience-tasks { list-style: none; margin: 0; padding: 0; }
+        .audience-tasks li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; margin-bottom: 0.5rem; }
+        .audience-tasks li i { color: var(--green); font-size: 0.75rem; }
+
+        /* Benefit Card */
+        .benefit-card { display: flex; align-items: flex-start; gap: 1.25rem; background: linear-gradient(135deg, rgba(28,193,1,0.05), rgba(86,173,192,0.05)); border: 1px solid rgba(28,193,1,0.2); border-radius: 12px; padding: 1.5rem; }
+        .benefit-icon { width: 48px; height: 48px; background: rgba(28,193,1,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: var(--green); flex-shrink: 0; }
+        .benefit-content h4 { font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+        .benefit-content p { font-size: 0.9375rem; color: var(--text-secondary); margin: 0; }
+</style>
+
+<style>
+        /* Steps */
+        .steps-container { display: flex; flex-direction: column; gap: 1.5rem; }
+        .step-card { display: flex; gap: 1.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; }
+        .step-number { width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: white; flex-shrink: 0; }
+        .step-content h4 { font-size: 1.125rem; font-weight: 600; margin: 0 0 0.75rem 0; }
+        .step-list { margin: 0 0 1rem 0; padding-left: 1.25rem; }
+        .step-list li { margin-bottom: 0.5rem; line-height: 1.6; }
+        .tip-box, .info-box { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1rem; border-radius: 8px; font-size: 0.875rem; margin-top: 0.5rem; }
+        .tip-box { background: rgba(28,193,1,0.1); border: 1px solid rgba(28,193,1,0.2); }
+        .tip-box i { color: var(--green); margin-top: 2px; }
+        .info-box { background: rgba(107,107,247,0.1); border: 1px solid rgba(107,107,247,0.2); }
+        .info-box i { color: var(--accent-primary); margin-top: 2px; }
+
+        /* Workflow Timeline */
+        .workflow-intro { font-size: 1.0625rem; margin-bottom: 2rem; }
+        .workflow-timeline { position: relative; padding-left: 2rem; }
+        .workflow-timeline::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary), var(--accent-teal)); border-radius: 1px; }
+        .timeline-item { position: relative; padding-bottom: 2rem; }
+        .timeline-item:last-child { padding-bottom: 0; }
+        .timeline-marker { position: absolute; left: -2rem; width: 32px; height: 32px; background: var(--bg-card); border: 2px solid var(--accent-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent-primary); font-size: 0.875rem; }
+        .timeline-item.highlight .timeline-marker { background: var(--accent-primary); color: white; box-shadow: 0 0 0 4px rgba(107,107,247,0.2); }
+        .timeline-content { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem 1.5rem; margin-left: 1rem; }
+        .timeline-item.highlight .timeline-content { border-color: var(--accent-primary); background: rgba(107,107,247,0.03); }
+        .timeline-content h4 { font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+        .timeline-content p { font-size: 0.9375rem; margin-bottom: 0.75rem; }
+        .timeline-content p:last-child { margin-bottom: 0; }
+        .formula-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem 1rem; margin-top: 0.75rem; }
+        .formula-box code { font-family: 'Courier New', monospace; font-size: 0.875rem; color: var(--accent-primary); }
+
+        /* Classification Formulas */
+        .classification-formulas { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+        .formula-item { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); flex-wrap: wrap; }
+        .formula-badge { padding: 0.25rem 0.75rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
+        .formula-item.conflict .formula-badge { background: var(--red-1); color: var(--red-4); }
+        .formula-item.safe .formula-badge { background: var(--green-1); color: var(--green-4); }
+        .formula-item.customised .formula-badge { background: var(--teal-1); color: var(--teal-4); }
+        .formula-item.deleted .formula-badge { background: var(--orange-1); color: var(--orange-4); }
+        .formula-item code { font-family: 'Courier New', monospace; font-size: 0.8125rem; flex-shrink: 0; }
+        .formula-desc { font-size: 0.8125rem; color: var(--text-secondary); margin-left: auto; }
+
+        /* Classification Cards */
+        .classification-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .classification-card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .classification-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 0.5rem; }
+        .classification-card.safe .classification-header { background: rgba(28,193,1,0.05); }
+        .classification-card.conflict .classification-header { background: rgba(222,0,55,0.05); }
+        .classification-card.customised .classification-header { background: rgba(86,173,192,0.05); }
+        .classification-card.deleted .classification-header { background: rgba(250,169,47,0.05); }
+        .classification-badge { padding: 0.375rem 0.875rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .classification-SAFE { background: var(--green-1); color: var(--green-4); }
+        .classification-CONFLICT { background: var(--red-1); color: var(--red-4); }
+        .classification-CUSTOMISED { background: var(--teal-1); color: var(--teal-4); }
+        .classification-DELETED { background: var(--orange-1); color: var(--orange-4); }
+        .classification-action { font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.625rem; border-radius: 4px; }
+        .classification-action.safe { background: rgba(28,193,1,0.1); color: var(--green); }
+        .classification-action.attention { background: rgba(222,0,55,0.1); color: var(--red); }
+        .classification-action.info { background: rgba(86,173,192,0.1); color: var(--accent-teal); }
+        .classification-action.warning { background: rgba(250,169,47,0.1); color: var(--accent-orange); }
+        .classification-body { padding: 1.25rem; }
+        .classification-body h4 { font-size: 0.875rem; font-weight: 600; margin: 0 0 0.5rem 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .classification-body h4:not(:first-child) { margin-top: 1.25rem; }
+        .classification-body p { font-size: 0.9375rem; margin-bottom: 0.75rem; }
+        .classification-body ul { margin: 0; padding-left: 1.25rem; }
+        .classification-body li { font-size: 0.875rem; margin-bottom: 0.375rem; line-height: 1.5; }
+</style>
+
+<style>
+        /* Review Tips */
+        .review-tips { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        .tip-card { display: flex; gap: 1rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; transition: all 0.2s; }
+        .tip-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(107,107,247,0.1); }
+        .tip-icon { width: 40px; height: 40px; background: rgba(107,107,247,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--accent-primary); font-size: 1rem; flex-shrink: 0; }
+        .tip-content h4 { font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+        .tip-content p { font-size: 0.875rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+
+        /* Report Types */
+        .report-types { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .report-card { display: flex; gap: 1.25rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; }
+        .report-icon { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+        .report-icon.excel { background: rgba(28,193,1,0.1); color: var(--green); }
+        .report-icon.word { background: rgba(107,107,247,0.1); color: var(--accent-primary); }
+        .report-info h4 { font-size: 1.125rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+        .report-info p { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6; }
+        .report-features { margin: 0; padding-left: 1.25rem; }
+        .report-features li { font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.25rem; }
+
+        /* Object Types */
+        .object-types-intro { font-size: 1.0625rem; margin-bottom: 2rem; }
+        .object-types-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+        .object-type-card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .object-type-card.supported { border-color: rgba(28,193,1,0.3); }
+        .object-type-card.excluded { border-color: rgba(250,169,47,0.3); }
+        .object-type-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem; border-bottom: 1px solid var(--border-color); }
+        .object-type-card.supported .object-type-header { background: rgba(28,193,1,0.05); }
+        .object-type-card.excluded .object-type-header { background: rgba(250,169,47,0.05); }
+        .object-type-header h4 { font-size: 1.125rem; font-weight: 600; margin: 0; }
+        .object-type-count { font-size: 0.8125rem; color: var(--text-secondary); }
+        .object-type-body { padding: 1.25rem; }
+        .object-type-body > p { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem; }
+        .object-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+        .object-list.excluded { grid-template-columns: 1fr; }
+        .object-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.625rem 0.875rem; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; transition: all 0.2s; }
+        .object-item:hover { border-color: var(--accent-primary); transform: translateX(2px); }
+        .object-item i { color: var(--text-secondary); font-size: 0.875rem; width: 18px; text-align: center; flex-shrink: 0; }
+        .object-type-card.supported .object-item i { color: var(--green); }
+        .object-type-card.excluded .object-item i { color: var(--accent-orange); }
+        .object-details { display: flex; flex-direction: column; gap: 0.125rem; }
+        .object-details span { font-weight: 500; }
+        .object-details small { font-size: 0.75rem; color: var(--text-secondary); }
+        .object-types-note { display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem; background: rgba(107,107,247,0.05); border: 1px solid rgba(107,107,247,0.2); border-radius: 10px; }
+        .object-types-note > i { color: var(--accent-primary); font-size: 1.25rem; margin-top: 0.125rem; flex-shrink: 0; }
+        .object-types-note strong { display: block; font-size: 0.9375rem; margin-bottom: 0.375rem; }
+        .object-types-note p { font-size: 0.875rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+
+        /* FAQ */
+        .faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .faq-item { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; transition: all 0.2s; }
+        .faq-item:hover { border-color: var(--accent-primary); }
+        .faq-question { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: transparent; border: none; cursor: pointer; text-align: left; font-size: 0.9375rem; font-weight: 500; transition: all 0.2s; }
+        .faq-question:hover { background: rgba(107,107,247,0.05); }
+        .faq-question i { color: var(--text-secondary); transition: transform 0.3s; }
+        .faq-item.open .faq-question i { transform: rotate(180deg); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s; }
+        .faq-item.open .faq-answer { max-height: 500px; }
+        .faq-answer p, .faq-answer ul { padding: 0 1.25rem 1.25rem; margin: 0; font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.7; }
+        .faq-answer ul { padding-left: 2.5rem; }
+        .faq-answer li { margin-bottom: 0.25rem; }
+
+        /* Support */
+        .support-section { background: linear-gradient(135deg, rgba(107,107,247,0.1), rgba(181,97,255,0.1)); border: 1px solid rgba(107,107,247,0.3); }
+        .support-card { display: flex; align-items: center; gap: 1.5rem; }
+        .support-icon { width: 64px; height: 64px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white; flex-shrink: 0; }
+        .support-content h3 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+        .support-content p { font-size: 0.9375rem; color: var(--text-secondary); margin: 0; }
+
+        /* Footer */
+        .footer { padding: 2rem; text-align: center; border-top: 1px solid var(--border-color); margin-top: 2rem; }
+        .footer p { color: var(--text-secondary); font-size: 0.875rem; margin: 0; }
+
+        /* Responsive */
+        @media (max-width: 992px) { .concept-grid, .classification-cards, .review-tips, .report-types, .audience-grid, .object-types-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .quick-nav { position: static; } .step-card, .audience-card, .benefit-card, .support-card, .report-card { flex-direction: column; gap: 1rem; } .formula-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; } .formula-desc { margin-left: 0; } .object-list { grid-template-columns: 1fr; } .hero h1 { font-size: 2.25rem; } .nav-links { display: none; } }
+</style>
+
+    <!-- Hero Section -->
+    <section class="hero" id="top">
+        <div class="hero-content">
+            <div class="hero-badge"><i class="fas fa-bolt"></i> Intelligent Merge Analysis for Appian</div>
+            <h1>Upgrade Appian Packages<br><span>Without the Guesswork</span></h1>
+            <p class="hero-subtitle">MergeAssist uses three-way comparison and set theory to precisely classify every change when upgrading vendor packages. Know exactly what needs attention before you import.</p>
+            <!-- <a href="#guide" class="btn-primary"><i class="fas fa-book-open"></i> View Documentation</a> -->
+        </div>
+    </section>
+
+    <!-- Content Container -->
+    <div class="content-container" id="guide">
+        <!-- Quick Navigation -->
+        <!-- <div class="quick-nav">
+            <div class="quick-nav-title"><i class="fas fa-compass"></i> Quick Navigation</div>
+            <div class="quick-nav-links">
+                <a href="#overview" class="quick-nav-link"><i class="fas fa-info-circle"></i> Overview</a>
+                <a href="#audience" class="quick-nav-link"><i class="fas fa-users"></i> Who Is This For</a>
+                <a href="#getting-started" class="quick-nav-link"><i class="fas fa-rocket"></i> Getting Started</a>
+                <a href="#workflow" class="quick-nav-link"><i class="fas fa-project-diagram"></i> Workflow</a>
+                <a href="#classifications" class="quick-nav-link"><i class="fas fa-tags"></i> Classifications</a>
+                <a href="#reviewing" class="quick-nav-link"><i class="fas fa-search"></i> Reviewing</a>
+                <a href="#reports" class="quick-nav-link"><i class="fas fa-file-alt"></i> Reports</a>
+                <a href="#objects" class="quick-nav-link"><i class="fas fa-cubes"></i> Object Types</a>
+                <a href="#faq" class="quick-nav-link"><i class="fas fa-question-circle"></i> FAQ</a>
+            </div>
+        </div> -->
+
+        <!-- Overview Section -->
+        <div class="section-card" id="overview">
+                <div class="section-header">
+                    <div class="section-icon purple"><i class="fas fa-info-circle"></i></div>
+                    <div><h2>What is MergeAssist?</h2><p class="section-subtitle">Understanding the core concept</p></div>
+                </div>
+                <div class="intro-card">
+                    <p class="intro-text"><strong>MergeAssist</strong> is an intelligent tool designed to simplify the complex process of merging Appian application packages. When you're upgrading a vendor package that your team has customized, MergeAssist analyzes all three versions to tell you exactly what needs attention.</p>
+                </div>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-icon package-a"><i class="fas fa-box"></i></div>
+                        <h4>Base Version</h4>
+                        <p class="concept-label">(Package A)</p>
+                        <p>The original vendor package before any customizations. This is your starting point.</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-icon package-b"><i class="fas fa-user-edit"></i></div>
+                        <h4>Customized Version</h4>
+                        <p class="concept-label">(Package B)</p>
+                        <p>Your team's customized version with all the modifications you've made to the base.</p>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-icon package-c"><i class="fas fa-arrow-up"></i></div>
+                        <h4>New Vendor Version</h4>
+                        <p class="concept-label">(Package C)</p>
+                        <p>The latest vendor release with new features, fixes, and improvements.</p>
+                    </div>
+                </div>
+                <div class="why-card">
+                    <h4><i class="fas fa-lightbulb"></i> Why Three-Way?</h4>
+                    <p>Traditional two-way diff tools can only compare two files at a time. They can't distinguish between changes you made and changes the vendor made. MergeAssist uses <strong>set theory</strong> to analyze all three versions simultaneously, giving you precise classification of every change.</p>
+                </div>
+        </div>
+
+        <!-- Audience Section -->
+        <div class="section-card" id="audience">
+                <div class="section-header">
+                    <div class="section-icon teal"><i class="fas fa-users"></i></div>
+                    <div><h2>Who is this for?</h2><p class="section-subtitle">Understanding your role in the upgrade process</p></div>
+                </div>
+                <div class="intro-card">
+                    <p class="intro-text"><strong>MergeAssist</strong> is designed for Appian customers and implementation teams who have customized a vendor-provided solution and need to adopt a newer vendor release. It acts as a <strong>staging environment</strong> where you can analyze the impact of an upgrade without importing the new vendor package into any Appian environment.</p>
+                </div>
+                <div class="audience-grid">
+                    <div class="audience-card">
+                        <div class="audience-icon leads"><i class="fas fa-chess-king"></i></div>
+                        <div class="audience-content">
+                            <h4>Tech Leads & Architects</h4>
+                            <p class="audience-role">Strategic Planning & Estimation</p>
+                            <p>Use MergeAssist to get a comprehensive overview of the upgrade scope. Quickly assess how many conflicts exist, identify high-risk areas, and estimate the effort required for adoption planning.</p>
+                            <ul class="audience-tasks">
+                                <li><i class="fas fa-check"></i> Assess upgrade complexity at a glance</li>
+                                <li><i class="fas fa-check"></i> Identify potential blockers early</li>
+                                <li><i class="fas fa-check"></i> Generate reports for stakeholder communication</li>
+                                <li><i class="fas fa-check"></i> Plan resource allocation for the upgrade</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="audience-card">
+                        <div class="audience-icon developers"><i class="fas fa-code"></i></div>
+                        <div class="audience-content">
+                            <h4>Developers</h4>
+                            <p class="audience-role">Hands-on Implementation</p>
+                            <p>Use MergeAssist during the actual implementation phase to compare objects side-by-side, understand exactly what changed, and make informed decisions about how to merge vendor updates with your customizations.</p>
+                            <ul class="audience-tasks">
+                                <li><i class="fas fa-check"></i> Compare objects with detailed diff views</li>
+                                <li><i class="fas fa-check"></i> Review changes in dependency order</li>
+                                <li><i class="fas fa-check"></i> Track review progress across the team</li>
+                                <li><i class="fas fa-check"></i> Document decisions with notes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="benefit-content">
+                        <h4>No Environment Risk</h4>
+                        <p>Analyze the new vendor release <strong>before</strong> importing it into any Appian environment. MergeAssist works entirely with exported packages, so you can evaluate the upgrade impact without affecting your development, test, or production environments.</p>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Getting Started Section -->
+        <div class="section-card" id="getting-started">
+                <div class="section-header">
+                    <div class="section-icon teal"><i class="fas fa-rocket"></i></div>
+                    <div><h2>Getting Started</h2><p class="section-subtitle">Your first merge analysis in 3 simple steps</p></div>
+                </div>
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Prepare Your Packages</h4>
+                            <p>Gather the three Appian export packages (ZIP files) you want to compare:</p>
+                            <ul class="step-list">
+                                <li><strong>Package A:</strong> Export the original vendor application from your baseline environment</li>
+                                <li><strong>Package B:</strong> Export your customized version from your development/production environment</li>
+                                <li><strong>Package C:</strong> Obtain the new vendor release package</li>
+                            </ul>
+                            <div class="tip-box"><i class="fas fa-lightbulb"></i><span>Ensure all packages are exported with the same export settings for accurate comparison.</span></div>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Upload & Analyze</h4>
+                            <p>Start a new merge session and upload your packages:</p>
+                            <ul class="step-list">
+                                <li>Click <strong>"Create Merge Session"</strong> from the dashboard</li>
+                                <li>Give your session a descriptive name</li>
+                                <li>Upload each package to its designated slot</li>
+                                <li>Click <strong>"Start Analysis"</strong> to begin processing</li>
+                            </ul>
+                            <div class="info-box"><i class="fas fa-clock"></i><span>Analysis time depends on package size. Large packages (500+ objects) may take a few minutes.</span></div>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Review Results</h4>
+                            <p>Once analysis completes, you'll see a comprehensive breakdown:</p>
+                            <ul class="step-list">
+                                <li>View the <strong>summary dashboard</strong> with change statistics</li>
+                                <li>Filter changes by classification, object type, or status</li>
+                                <li>Review each change in detail with side-by-side comparisons</li>
+                                <li>Mark changes as reviewed and add notes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Workflow Section -->
+        <div class="section-card" id="workflow">
+                <div class="section-header">
+                    <div class="section-icon pink"><i class="fas fa-project-diagram"></i></div>
+                    <div><h2>The Merge Workflow</h2><p class="section-subtitle">Understanding what happens behind the scenes</p></div>
+                </div>
+                <p class="workflow-intro">When you start a merge analysis, MergeAssist performs a sophisticated 10-step process to classify every change accurately. Here's what happens:</p>
+                <div class="workflow-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker"><i class="fas fa-folder-plus"></i></div>
+                        <div class="timeline-content">
+                            <h4>Step 1-4: Package Extraction</h4>
+                            <p>Each package is extracted and parsed. All Appian objects (interfaces, expression rules, process models, etc.) are identified and catalogued with their metadata and content.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"><i class="fas fa-code-compare"></i></div>
+                        <div class="timeline-content">
+                            <h4>Step 5: Delta Comparison (A → C)</h4>
+                            <p>Compares the base version to the new vendor version. This identifies <strong>Set D</strong> — all changes the vendor made in their new release.</p>
+                            <div class="formula-box"><code>Set D = Objects changed between Package A and Package C</code></div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"><i class="fas fa-user-check"></i></div>
+                        <div class="timeline-content">
+                            <h4>Step 6: Customer Comparison (A → B)</h4>
+                            <p>Compares the base version to your customized version. This identifies <strong>Set E</strong> — all changes your team made.</p>
+                            <div class="formula-box"><code>Set E = Objects changed between Package A and Package B</code></div>
+                        </div>
+                    </div>
+                    <div class="timeline-item highlight">
+                        <div class="timeline-marker"><i class="fas fa-magic"></i></div>
+                        <div class="timeline-content">
+                            <h4>Step 7: Classification (The Magic)</h4>
+                            <p>Using set theory, MergeAssist classifies each change:</p>
+                            <div class="classification-formulas">
+                                <div class="formula-item conflict"><span class="formula-badge">CONFLICT</span><code>D ∩ E where B ≠ C</code><span class="formula-desc">Both modified differently</span></div>
+                                <div class="formula-item safe"><span class="formula-badge">SAFE</span><code>D \ E or (D ∩ E where B = C)</code><span class="formula-desc">Vendor-only changes or identical changes</span></div>
+                                <div class="formula-item customised"><span class="formula-badge">CUSTOMISED</span><code>E \ D</code><span class="formula-desc">Customer-only changes (additions or modifications)</span></div>
+                                <div class="formula-item deleted"><span class="formula-badge">DELETED</span><code>D (DEPRECATED) ∩ E</code><span class="formula-desc">Vendor removed, but you modified</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"><i class="fas fa-sitemap"></i></div>
+                        <div class="timeline-content">
+                            <h4>Step 8-9: Dependency Analysis</h4>
+                            <p>Analyzes object dependencies to determine the optimal order for reviewing and applying changes. Objects that depend on others are flagged so you can review them in the right sequence.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker"><i class="fas fa-robot"></i></div>
+                        <div class="timeline-content">
+                            <h4>Step 10: AI Summary (Optional)</h4>
+                            <p>If enabled, AI generates human-readable summaries of complex changes to help you understand what changed and why it matters.</p>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Classifications Section -->
+        <div class="section-card" id="classifications">
+                <div class="section-header">
+                    <div class="section-icon orange"><i class="fas fa-tags"></i></div>
+                    <div><h2>Understanding Classifications</h2><p class="section-subtitle">What each classification means and how to handle it</p></div>
+                </div>
+                <div class="classification-cards">
+                    <div class="classification-card safe">
+                        <div class="classification-header">
+                            <span class="classification-badge classification-SAFE">SAFE</span>
+                            <span class="classification-action safe">Safe to Auto-Merge</span>
+                        </div>
+                        <div class="classification-body">
+                            <h4>What it means</h4>
+                            <p>Only the vendor made changes, or both parties made identical changes. These are safe to merge automatically.</p>
+                            <h4>Scenarios</h4>
+                            <ul>
+                                <li><strong>Vendor-only change:</strong> The vendor modified or added the object, but you didn't touch it. Accept the vendor's version.</li>
+                                <li><strong>Vendor addition:</strong> The vendor added a new object in their latest release. Safe to accept.</li>
+                                <li><strong>Identical changes:</strong> Both you and the vendor made the exact same modification. Either version works.</li>
+                            </ul>
+                            <h4>Recommended Action</h4>
+                            <p>Review briefly to confirm, then mark as reviewed. These typically don't need manual intervention.</p>
+                        </div>
+                    </div>
+                    <div class="classification-card conflict">
+                        <div class="classification-header">
+                            <span class="classification-badge classification-CONFLICT">CONFLICT</span>
+                            <span class="classification-action attention">Requires Manual Review</span>
+                        </div>
+                        <div class="classification-body">
+                            <h4>What it means</h4>
+                            <p>Both you and the vendor modified the same object differently. You need to decide how to merge these changes.</p>
+                            <h4>Why it happens</h4>
+                            <ul>
+                                <li>You customized a component that the vendor also updated</li>
+                                <li>Both parties fixed the same bug differently</li>
+                                <li>Vendor refactored code you had extended</li>
+                            </ul>
+                            <h4>Recommended Action</h4>
+                            <p>Carefully review both versions. You may need to:</p>
+                            <ul>
+                                <li>Manually merge the changes</li>
+                                <li>Choose one version and re-apply the other's changes</li>
+                                <li>Consult with your team or the vendor</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="classification-card customised">
+                        <div class="classification-header">
+                            <span class="classification-badge classification-CUSTOMISED">CUSTOMISED</span>
+                            <span class="classification-action info">Customer-Only Changes</span>
+                        </div>
+                        <div class="classification-body">
+                            <h4>What it means</h4>
+                            <p>Your team made changes that the vendor didn't touch. These are your customizations that are preserved during import.</p>
+                            <h4>Scenarios</h4>
+                            <ul>
+                                <li><strong>Customer modification:</strong> You modified an object, but the vendor didn't change it. Keep your version.</li>
+                                <li><strong>Customer addition:</strong> Your team added a custom object to the application.</li>
+                            </ul>
+                            <h4>Common examples</h4>
+                            <ul>
+                                <li>Custom expression rules added by your team</li>
+                                <li>Modified interfaces for enhanced UX</li>
+                                <li>Custom integrations or connected systems</li>
+                                <li>Bug fixes or enhancements you made</li>
+                            </ul>
+                            <h4>Recommended Action</h4>
+                            <p>These are your custom objects. Verify they are still needed and don't conflict with new vendor functionality. Usually safe to keep as-is.</p>
+                        </div>
+                    </div>
+                    <div class="classification-card deleted">
+                        <div class="classification-header">
+                            <span class="classification-badge classification-DELETED">DELETED</span>
+                            <span class="classification-action warning">Careful Review Needed</span>
+                        </div>
+                        <div class="classification-body">
+                            <h4>What it means</h4>
+                            <p>The vendor deprecated or removed an object that you had customized. This requires careful consideration.</p>
+                            <h4>Why it's flagged</h4>
+                            <ul>
+                                <li>Vendor removed functionality you depend on</li>
+                                <li>Object was replaced with a new implementation</li>
+                                <li>Vendor deprecated legacy components</li>
+                            </ul>
+                            <h4>Recommended Action</h4>
+                            <p>Investigate why the vendor removed it. You may need to:</p>
+                            <ul>
+                                <li>Migrate your customizations to the replacement object</li>
+                                <li>Keep your version if the functionality is still needed</li>
+                                <li>Remove dependencies on the deprecated object</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Reviewing Section -->
+        <div class="section-card" id="reviewing">
+                <div class="section-header">
+                    <div class="section-icon green"><i class="fas fa-search"></i></div>
+                    <div><h2>Reviewing Changes</h2><p class="section-subtitle">Best practices for efficient change review</p></div>
+                </div>
+                <div class="review-tips">
+                    <div class="tip-card">
+                        <div class="tip-icon"><i class="fas fa-filter"></i></div>
+                        <div class="tip-content">
+                            <h4>Use Filters Effectively</h4>
+                            <p>Start by filtering to show only <strong>CONFLICT</strong> items. These need the most attention. Then move to <strong>DELETED</strong>, and finally review <strong>SAFE</strong> items.</p>
+                        </div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon"><i class="fas fa-layer-group"></i></div>
+                        <div class="tip-content">
+                            <h4>Group by Object Type</h4>
+                            <p>Review similar objects together. For example, review all Expression Rules first, then Interfaces. This helps you spot patterns and maintain consistency.</p>
+                        </div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon"><i class="fas fa-sitemap"></i></div>
+                        <div class="tip-content">
+                            <h4>Follow Dependency Order</h4>
+                            <p>MergeAssist calculates the optimal review order based on dependencies. Objects that others depend on should be reviewed first. Use the suggested order when possible.</p>
+                        </div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon"><i class="fas fa-sticky-note"></i></div>
+                        <div class="tip-content">
+                            <h4>Add Notes</h4>
+                            <p>Document your decisions as you review. Notes help team members understand why certain choices were made and serve as a record for future upgrades.</p>
+                        </div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon"><i class="fas fa-code"></i></div>
+                        <div class="tip-content">
+                            <h4>Use Side-by-Side Comparison</h4>
+                            <p>For conflicts, use the detailed view to see both versions side by side. The diff highlighting makes it easy to spot exactly what changed.</p>
+                        </div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon"><i class="fas fa-users"></i></div>
+                        <div class="tip-content">
+                            <h4>Collaborate with Your Team</h4>
+                            <p>For complex conflicts, involve team members who made the original customizations. They'll have context on why changes were made and how to best merge them.</p>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div class="section-card" id="reports">
+                <div class="section-header">
+                    <div class="section-icon pink"><i class="fas fa-file-alt"></i></div>
+                    <div><h2>Generating Reports</h2><p class="section-subtitle">Export your analysis for documentation and collaboration</p></div>
+                </div>
+                <div class="report-types">
+                    <div class="report-card">
+                        <div class="report-icon excel"><i class="fas fa-file-excel"></i></div>
+                        <div class="report-info">
+                            <h4>Excel Report</h4>
+                            <p>Comprehensive spreadsheet with all changes, classifications, and metadata. Perfect for detailed analysis, filtering, and sharing with stakeholders.</p>
+                            <ul class="report-features">
+                                <li>All objects with full metadata</li>
+                                <li>Classification and status columns</li>
+                                <li>Filterable and sortable</li>
+                                <li>Change type breakdown</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="report-card">
+                        <div class="report-icon word"><i class="fas fa-file-word"></i></div>
+                        <div class="report-info">
+                            <h4>Word Document</h4>
+                            <p>Formatted document suitable for management review and documentation. Includes executive summary and detailed change descriptions.</p>
+                            <ul class="report-features">
+                                <li>Executive summary</li>
+                                <li>Change statistics</li>
+                                <li>Detailed object descriptions</li>
+                                <li>Print-ready format</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Object Types Section -->
+        <div class="section-card" id="objects">
+                <div class="section-header">
+                    <div class="section-icon pink"><i class="fas fa-cubes"></i></div>
+                    <div><h2>Supported Object Types</h2><p class="section-subtitle">Appian objects that MergeAssist can analyze and compare</p></div>
+                </div>
+                <p class="object-types-intro">MergeAssist supports most Appian object types for detailed comparison and merge analysis. Some objects are not supported as of now.</p>
+                <div class="object-types-grid">
+                    <div class="object-type-card supported">
+                        <div class="object-type-header">
+                            <div><h4>Supported Objects</h4></div>
+                            <div><span class="object-type-count">15 types</span></div>
+                        </div>
+                        <div class="object-type-body">
+                            <p>These object types are fully analyzed with detailed comparison views:</p>
+                            <div class="object-list">
+                                <div class="object-item"><i class="fas fa-window-maximize"></i><span>Interface</span></div>
+                                <div class="object-item"><i class="fas fa-function"></i><span>Expression Rule</span></div>
+                                <div class="object-item"><i class="fas fa-project-diagram"></i><span>Process Model</span></div>
+                                <div class="object-item"><i class="fas fa-database"></i><span>Record Type</span></div>
+                                <div class="object-item"><i class="fas fa-code"></i><span>CDT (Custom Data Type)</span></div>
+                                <div class="object-item"><i class="fas fa-plug"></i><span>Integration</span></div>
+                                <div class="object-item"><i class="fas fa-globe"></i><span>Web API</span></div>
+                                <div class="object-item"><i class="fas fa-sitemap"></i><span>Site</span></div>
+                                <div class="object-item"><i class="fas fa-users"></i><span>Group</span></div>
+                                <div class="object-item"><i class="fas fa-hashtag"></i><span>Constant</span></div>
+                                <div class="object-item"><i class="fas fa-link"></i><span>Connected System</span></div>
+                                <div class="object-item"><i class="fas fa-th-large"></i><span>Control Panel</span></div>
+                                <div class="object-item"><i class="fas fa-language"></i><span>Translation Set</span></div>
+                                <div class="object-item"><i class="fas fa-font"></i><span>Translation String</span></div>
+                                <div class="object-item"><i class="fas fa-question-circle"></i><span>Unknown (Generic)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="object-type-card excluded">
+                        <div class="object-type-header">
+                            <div><h4>Excluded Objects</h4></div>
+                            <div><span class="object-type-count">8 types</span></div>
+                        </div>
+                        <div class="object-type-body">
+                            <p>These object types are skipped during analysis:</p>
+                            <div class="object-list excluded">
+                                <div class="object-item"><i class="fas fa-folder"></i><div class="object-details"><span>Rules Folder</span><small>Container objects, no merge needed</small></div></div>
+                                <div class="object-item"><i class="fas fa-book"></i><div class="object-details"><span>Knowledge Center</span><small>Container for documents</small></div></div>
+                                <div class="object-item"><i class="fas fa-file"></i><div class="object-details"><span>Document</span><small>Binary files (images, PDFs, etc.)</small></div></div>
+                                <div class="object-item"><i class="fas fa-folder-open"></i><div class="object-details"><span>Document Folder</span><small>Folder within Knowledge Center</small></div></div>
+                                <div class="object-item"><i class="fas fa-table"></i><div class="object-details"><span>Decision Table</span><small>Decision rule objects</small></div></div>
+                                <div class="object-item"><i class="fas fa-robot"></i><div class="object-details"><span>AI Skill</span><small>AI/ML skill configurations</small></div></div>
+                                <div class="object-item"><i class="fas fa-chart-bar"></i><div class="object-details"><span>Process Report</span><small>Analytics and reporting objects</small></div></div>
+                                <div class="object-item"><i class="fas fa-users-cog"></i><div class="object-details"><span>Group Type</span><small>Custom group type definitions</small></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="object-types-note">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>Why are some objects excluded?</strong>
+                        <p>Excluded objects are typically containers (folders), binary files (documents), or specialized objects that don't benefit from text-based merge analysis. These objects are better handled through Appian's native import process.</p>
+                        <p style="margin-top:0.75rem;color:var(--accent-secondary);font-weight:500;"><i class="fas fa-road"></i> Support for these object types is planned for future versions.</p>
+                    </div>
+                </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="section-card" id="faq">
+                <div class="section-header">
+                    <div class="section-icon purple"><i class="fas fa-question-circle"></i></div>
+                    <div><h2>Frequently Asked Questions</h2><p class="section-subtitle">Quick answers to common questions</p></div>
+                </div>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question"><span>What file formats are supported for upload?</span><i class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer"><p>MergeAssist accepts standard Appian export packages in ZIP format. These are the same files you get when exporting applications from Appian Designer.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question"><span>How long does analysis take?</span><i class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer"><p>Analysis time depends on package size. Small packages (under 100 objects) typically complete in under a minute. Large packages (500+ objects) may take several minutes. You'll see a progress indicator during processing.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question"><span>What Appian object types are supported?</span><i class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer">
+                            <p>MergeAssist supports all major Appian object types including:</p>
+                            <ul>
+                                <li>Interfaces</li>
+                                <li>Expression Rules</li>
+                                <li>Process Models</li>
+                                <li>Record Types</li>
+                                <li>CDTs (Complex Data Types)</li>
+                                <li>Integrations</li>
+                                <li>Web APIs</li>
+                                <li>Sites</li>
+                                <li>Groups</li>
+                                <li>Constants</li>
+                                <li>Connected Systems</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question"><span>Can I re-analyze a session with different packages?</span><i class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer"><p>Each merge session is tied to the packages uploaded during creation. To analyze different packages, create a new merge session. You can delete old sessions from the sessions list if they're no longer needed.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question"><span>How does MergeAssist determine if changes are identical?</span><i class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer"><p>MergeAssist uses SHA-512 diff hashes to compare content. This is the same approach Appian uses internally. Two objects with the same diff hash have identical content, even if they have different version UUIDs or timestamps.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question"><span>What does the AI summary feature do?</span><i class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer"><p>When enabled in Settings, AI generates human-readable summaries of complex changes. This helps you quickly understand what changed without reading through all the code. The feature is optional and can be disabled if not needed.</p></div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question"><span>Is my data secure?</span><i class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer"><p>All data is stored locally in your instance's database. Uploaded packages are processed on your server and are not sent to external services (except for optional AI summaries if enabled). You can backup and restore your data from the Settings page.</p></div>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Support Section -->
+        <div class="section-card support-section" style="margin-top:1.5rem;">
+            <div class="support-card">
+                <div class="support-icon"><i class="fas fa-life-ring"></i></div>
+                <div class="support-content">
+                    <h3>Need More Help?</h3>
+                    <p>If you have questions not covered here or encounter any issues, reach out to your system administrator or the development team for assistance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 MergeAssist. Built for Appian developers.</p>
+    </footer>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = btn.parentElement;
+                const isOpen = item.classList.contains('open');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+                if (!isOpen) item.classList.add('open');
+            });
+        });
+
+        // Smooth scroll for all anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 100; // Account for sticky nav
+                    const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                    window.scrollTo({ top: top, behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
