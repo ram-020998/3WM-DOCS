@@ -23,6 +23,7 @@
             --green: #1CC101;
             --red: #DE0037;
             --green-1: #E3FBDF; --green-4: #117C00;
+            --purple-1: #F3E8FF; --purple-4: #7C3AED;
             --red-1: #FFE7E7; --red-4: #9F0019;
             --teal-1: #E2FAF9; --teal-4: #2C6770;
             --orange-1: #FFEED3; --orange-4: #995C00;
@@ -175,7 +176,7 @@
         .formula-item { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); flex-wrap: wrap; }
         .formula-badge { padding: 0.25rem 0.75rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
         .formula-item.conflict .formula-badge { background: var(--red-1); color: var(--red-4); }
-        .formula-item.safe .formula-badge { background: var(--green-1); color: var(--green-4); }
+        .formula-item.compatible .formula-badge { background: var(--purple-1); color: var(--purple-4); }
         .formula-item.customised .formula-badge { background: var(--teal-1); color: var(--teal-4); }
         .formula-item.deleted .formula-badge { background: var(--orange-1); color: var(--orange-4); }
         .formula-item code { font-family: 'Courier New', monospace; font-size: 0.8125rem; flex-shrink: 0; }
@@ -185,17 +186,17 @@
         .classification-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
         .classification-card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
         .classification-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 0.5rem; }
-        .classification-card.safe .classification-header { background: rgba(28,193,1,0.05); }
+        .classification-card.compatible .classification-header { background: rgba(181,97,255,0.05); }
         .classification-card.conflict .classification-header { background: rgba(222,0,55,0.05); }
         .classification-card.customised .classification-header { background: rgba(86,173,192,0.05); }
         .classification-card.deleted .classification-header { background: rgba(250,169,47,0.05); }
         .classification-badge { padding: 0.375rem 0.875rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .classification-SAFE { background: var(--green-1); color: var(--green-4); }
+        .classification-COMPATIBLE { background: var(--purple-1); color: var(--purple-4); }
         .classification-CONFLICT { background: var(--red-1); color: var(--red-4); }
         .classification-CUSTOMISED { background: var(--teal-1); color: var(--teal-4); }
         .classification-DELETED { background: var(--orange-1); color: var(--orange-4); }
         .classification-action { font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.625rem; border-radius: 4px; }
-        .classification-action.safe { background: rgba(28,193,1,0.1); color: var(--green); }
+        .classification-action.compatible { background: rgba(181,97,255,0.1); color: var(--purple-3); }
         .classification-action.attention { background: rgba(222,0,55,0.1); color: var(--red); }
         .classification-action.info { background: rgba(86,173,192,0.1); color: var(--accent-teal); }
         .classification-action.warning { background: rgba(250,169,47,0.1); color: var(--accent-orange); }
@@ -217,11 +218,10 @@
         .tip-content p { font-size: 0.875rem; color: var(--text-secondary); margin: 0; line-height: 1.6; }
 
         /* Report Types */
-        .report-types { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .report-types { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
         .report-card { display: flex; gap: 1.25rem; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; }
         .report-icon { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
         .report-icon.excel { background: rgba(28,193,1,0.1); color: var(--green); }
-        .report-icon.word { background: rgba(107,107,247,0.1); color: var(--accent-primary); }
         .report-info h4 { font-size: 1.125rem; font-weight: 600; margin: 0 0 0.5rem 0; }
         .report-info p { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6; }
         .report-features { margin: 0; padding-left: 1.25rem; }
@@ -281,7 +281,7 @@
         .footer p { color: var(--text-secondary); font-size: 0.875rem; margin: 0; }
 
         /* Responsive */
-        @media (max-width: 992px) { .concept-grid, .classification-cards, .review-tips, .report-types, .audience-grid, .object-types-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 992px) { .concept-grid, .classification-cards, .review-tips, .audience-grid, .object-types-grid { grid-template-columns: 1fr; } }
         @media (max-width: 768px) { .quick-nav { position: static; } .step-card, .audience-card, .benefit-card, .support-card, .report-card { flex-direction: column; gap: 1rem; } .formula-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; } .formula-desc { margin-left: 0; } .object-list { grid-template-columns: 1fr; } .hero h1 { font-size: 2.25rem; } .nav-links { display: none; } }
 </style>
 
@@ -290,7 +290,7 @@
         <div class="hero-content">
             <div class="hero-badge"><i class="fas fa-bolt"></i> Intelligent Merge Analysis for Appian</div>
             <h1>Upgrade Appian Packages<br><span>Without the Guesswork</span></h1>
-            <p class="hero-subtitle">MergeAssist uses three-way comparison and set theory to precisely classify every change when upgrading vendor packages. Know exactly what needs attention before you import.</p>
+            <p class="hero-subtitle">Use three-way comparison to precisely classify every change when upgrading Appian packages. Review changes before importing.</p>
             <!-- <a href="#guide" class="btn-primary"><i class="fas fa-book-open"></i> View Documentation</a> -->
         </div>
     </section>
@@ -317,34 +317,34 @@
         <div class="section-card" id="overview">
                 <div class="section-header">
                     <div class="section-icon purple"><i class="fas fa-info-circle"></i></div>
-                    <div><h2>What is MergeAssist?</h2><p class="section-subtitle">Understanding the core concept</p></div>
+                    <div><h2>About MergeAssist</h2><p class="section-subtitle">Understanding the core concept</p></div>
                 </div>
                 <div class="intro-card">
-                    <p class="intro-text"><strong>MergeAssist</strong> is an intelligent tool designed to simplify the complex process of merging Appian application packages. When you're upgrading a vendor package that your team has customized, MergeAssist analyzes all three versions to tell you exactly what needs attention.</p>
+                    <p class="intro-text">Use <strong>MergeAssist</strong> to analyze and merge Appian application packages. Analyze three package versions to identify required changes.</p>
                 </div>
                 <div class="concept-grid">
                     <div class="concept-card">
                         <div class="concept-icon package-a"><i class="fas fa-box"></i></div>
                         <h4>Base Version</h4>
                         <p class="concept-label">(Package A)</p>
-                        <p>The original vendor package before any customizations. This is your starting point.</p>
+                        <p>Original Appian package before customizations.</p>
                     </div>
                     <div class="concept-card">
                         <div class="concept-icon package-b"><i class="fas fa-user-edit"></i></div>
                         <h4>Customized Version</h4>
                         <p class="concept-label">(Package B)</p>
-                        <p>Your team's customized version with all the modifications you've made to the base.</p>
+                        <p>Customized version of Appian package containing modifications.</p>
                     </div>
                     <div class="concept-card">
                         <div class="concept-icon package-c"><i class="fas fa-arrow-up"></i></div>
-                        <h4>New Vendor Version</h4>
+                        <h4>New Version</h4>
                         <p class="concept-label">(Package C)</p>
-                        <p>The latest vendor release with new features, fixes, and improvements.</p>
+                        <p>Latest Appian package with new features, fixes, and improvements.</p>
                     </div>
                 </div>
                 <div class="why-card">
-                    <h4><i class="fas fa-lightbulb"></i> Why Three-Way?</h4>
-                    <p>Traditional two-way diff tools can only compare two files at a time. They can't distinguish between changes you made and changes the vendor made. MergeAssist uses <strong>set theory</strong> to analyze all three versions simultaneously, giving you precise classification of every change.</p>
+                    <h4><i class="fas fa-lightbulb"></i> Benefits of Three-Way Comparison</h4>
+                    <p>Standard comparison tools show changes between two versions. Including the original base enables MergeAssist to distinguish between team modifications and Appian's updates to identify required merges.</p>
                 </div>
         </div>
 
@@ -352,18 +352,18 @@
         <div class="section-card" id="audience">
                 <div class="section-header">
                     <div class="section-icon teal"><i class="fas fa-users"></i></div>
-                    <div><h2>Who is this for?</h2><p class="section-subtitle">Understanding your role in the upgrade process</p></div>
+                    <div><h2>Target Audiences</h2><p class="section-subtitle">Understanding your role in the upgrade process</p></div>
                 </div>
                 <div class="intro-card">
-                    <p class="intro-text"><strong>MergeAssist</strong> is designed for Appian customers and implementation teams who have customized a vendor-provided solution and need to adopt a newer vendor release. It acts as a <strong>staging environment</strong> where you can analyze the impact of an upgrade without importing the new vendor package into any Appian environment.</p>
+                    <p class="intro-text">Use <strong>MergeAssist</strong> to analyze upgrade impacts without importing packages into Appian environments. It acts as a staging environment for upgrade analysis.</p>
                 </div>
                 <div class="audience-grid">
                     <div class="audience-card">
                         <div class="audience-icon leads"><i class="fas fa-chess-king"></i></div>
                         <div class="audience-content">
-                            <h4>Tech Leads & Architects</h4>
-                            <p class="audience-role">Strategic Planning & Estimation</p>
-                            <p>Use MergeAssist to get a comprehensive overview of the upgrade scope. Quickly assess how many conflicts exist, identify high-risk areas, and estimate the effort required for adoption planning.</p>
+                            <h4>Tech Leads and Architects</h4>
+                            <p class="audience-role">Strategic Planning and Estimation</p>
+                            <p>Use MergeAssist to review upgrade scope and identify high-risk areas to estimate adoption effort.</p>
                             <ul class="audience-tasks">
                                 <li><i class="fas fa-check"></i> Assess upgrade complexity at a glance</li>
                                 <li><i class="fas fa-check"></i> Identify potential blockers early</li>
@@ -377,7 +377,7 @@
                         <div class="audience-content">
                             <h4>Developers</h4>
                             <p class="audience-role">Hands-on Implementation</p>
-                            <p>Use MergeAssist during the actual implementation phase to compare objects side-by-side, understand exactly what changed, and make informed decisions about how to merge vendor updates with your customizations.</p>
+                            <p>Use MergeAssist during implementation to compare objects side-by-side, identify changes, and merge vendor updates with team modifications.</p>
                             <ul class="audience-tasks">
                                 <li><i class="fas fa-check"></i> Compare objects with detailed diff views</li>
                                 <li><i class="fas fa-check"></i> Review changes in dependency order</li>
@@ -390,8 +390,8 @@
                 <div class="benefit-card">
                     <div class="benefit-icon"><i class="fas fa-shield-alt"></i></div>
                     <div class="benefit-content">
-                        <h4>No Environment Risk</h4>
-                        <p>Analyze the new vendor release <strong>before</strong> importing it into any Appian environment. MergeAssist works entirely with exported packages, so you can evaluate the upgrade impact without affecting your development, test, or production environments.</p>
+                        <h4>Upgrade Environments Confidently</h4>
+                        <p>Evaluate Appian releases and identify upgrade impacts before importing packages into Appian environments.</p>
                     </div>
                 </div>
         </div>
@@ -400,18 +400,18 @@
         <div class="section-card" id="getting-started">
                 <div class="section-header">
                     <div class="section-icon teal"><i class="fas fa-rocket"></i></div>
-                    <div><h2>Getting Started</h2><p class="section-subtitle">Your first merge analysis in 3 simple steps</p></div>
+                    <div><h2>Get Started</h2><p class="section-subtitle">Your first merge analysis in 3 simple steps</p></div>
                 </div>
                 <div class="steps-container">
                     <div class="step-card">
                         <div class="step-number">1</div>
                         <div class="step-content">
-                            <h4>Prepare Your Packages</h4>
-                            <p>Gather the three Appian export packages (ZIP files) you want to compare:</p>
+                            <h4>Prepare Packages</h4>
+                            <p>Gather three Appian export packages (ZIP files) to compare:</p>
                             <ul class="step-list">
-                                <li><strong>Package A:</strong> Export the original vendor application from your baseline environment</li>
+                                <li><strong>Package A:</strong> Export original Appian application from baseline environment</li>
                                 <li><strong>Package B:</strong> Export your customized version from your development/production environment</li>
-                                <li><strong>Package C:</strong> Obtain the new vendor release package</li>
+                                <li><strong>Package C:</strong> Obtain the Appian's new release package</li>
                             </ul>
                             <div class="tip-box"><i class="fas fa-lightbulb"></i><span>Ensure all packages are exported with the same export settings for accurate comparison.</span></div>
                         </div>
@@ -419,15 +419,15 @@
                     <div class="step-card">
                         <div class="step-number">2</div>
                         <div class="step-content">
-                            <h4>Upload & Analyze</h4>
+                            <h4>Upload and Analyze</h4>
                             <p>Start a new merge session and upload your packages:</p>
                             <ul class="step-list">
-                                <li>Click <strong>"Create Merge Session"</strong> from the dashboard</li>
-                                <li>Give your session a descriptive name</li>
-                                <li>Upload each package to its designated slot</li>
-                                <li>Click <strong>"Start Analysis"</strong> to begin processing</li>
+                                <li>1. In the dashboard, click Create Merge Session.</li>
+                                <li>2. Enter a session name.</li>
+                                <li>3. Upload each package to its designated slot.</li>
+                                <li>4. Click Start Analysis to begin processing.</li>
                             </ul>
-                            <div class="info-box"><i class="fas fa-clock"></i><span>Analysis time depends on package size. Large packages (500+ objects) may take a few minutes.</span></div>
+                            <div class="info-box"><i class="fas fa-clock"></i><span>Analysis time depends on package size. Large packages (500+ objects) take a few minutes.</span></div>
                         </div>
                     </div>
                     <div class="step-card">
@@ -450,41 +450,41 @@
         <div class="section-card" id="workflow">
                 <div class="section-header">
                     <div class="section-icon pink"><i class="fas fa-project-diagram"></i></div>
-                    <div><h2>The Merge Workflow</h2><p class="section-subtitle">Understanding what happens behind the scenes</p></div>
+                    <div><h2>Merge Workflow</h2><p class="section-subtitle">Behind the scenes</p></div>
                 </div>
-                <p class="workflow-intro">When you start a merge analysis, MergeAssist performs a sophisticated 10-step process to classify every change accurately. Here's what happens:</p>
+                <p class="workflow-intro">MergeAssist uses a 10-step process to classify changes. Here is the workflow:</p>
                 <div class="workflow-timeline">
                     <div class="timeline-item">
                         <div class="timeline-marker"><i class="fas fa-folder-plus"></i></div>
                         <div class="timeline-content">
-                            <h4>Step 1-4: Package Extraction</h4>
-                            <p>Each package is extracted and parsed. All Appian objects (interfaces, expression rules, process models, etc.) are identified and catalogued with their metadata and content.</p>
+                            <h4>Step 1-4: Extract Packages</h4>
+                            <p>Extract and parse packages. Identify all Appian objects and catalog their metadata.</p>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-marker"><i class="fas fa-code-compare"></i></div>
                         <div class="timeline-content">
-                            <h4>Step 5: Delta Comparison (A → C)</h4>
-                            <p>Compares the base version to the new vendor version. This identifies <strong>Set D</strong> — all changes the vendor made in their new release.</p>
+                            <h4>Step 5: Compare Delta (A → C)</h4>
+                            <p>Compare the base version to the new version from Appian to identify Set D (Appian changes).</p>
                             <div class="formula-box"><code>Set D = Objects changed between Package A and Package C</code></div>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-marker"><i class="fas fa-user-check"></i></div>
                         <div class="timeline-content">
-                            <h4>Step 6: Customer Comparison (A → B)</h4>
-                            <p>Compares the base version to your customized version. This identifies <strong>Set E</strong> — all changes your team made.</p>
+                            <h4>Step 6: Compare Customization (A → B)</h4>
+                            <p>Compare the base version to the customized version to identify Set E (team changes).</p>
                             <div class="formula-box"><code>Set E = Objects changed between Package A and Package B</code></div>
                         </div>
                     </div>
                     <div class="timeline-item highlight">
                         <div class="timeline-marker"><i class="fas fa-magic"></i></div>
                         <div class="timeline-content">
-                            <h4>Step 7: Classification (The Magic)</h4>
-                            <p>Using set theory, MergeAssist classifies each change:</p>
+                            <h4>Step 7: Classify Change</h4>
+                            <p>MergeAssist uses set theory to classify each change:</p>
                             <div class="classification-formulas">
                                 <div class="formula-item conflict"><span class="formula-badge">CONFLICT</span><code>D ∩ E where B ≠ C</code><span class="formula-desc">Both modified differently</span></div>
-                                <div class="formula-item safe"><span class="formula-badge">SAFE</span><code>D \ E or (D ∩ E where B = C)</code><span class="formula-desc">Vendor-only changes or identical changes</span></div>
+                                <div class="formula-item compatible"><span class="formula-badge">COMPATIBLE</span><code>D \ E or (D ∩ E where B = C)</code><span class="formula-desc">Vendor-only changes or identical changes</span></div>
                                 <div class="formula-item customised"><span class="formula-badge">CUSTOMISED</span><code>E \ D</code><span class="formula-desc">Customer-only changes (additions or modifications)</span></div>
                                 <div class="formula-item deleted"><span class="formula-badge">DELETED</span><code>D (DEPRECATED) ∩ E</code><span class="formula-desc">Vendor removed, but you modified</span></div>
                             </div>
@@ -493,15 +493,15 @@
                     <div class="timeline-item">
                         <div class="timeline-marker"><i class="fas fa-sitemap"></i></div>
                         <div class="timeline-content">
-                            <h4>Step 8-9: Dependency Analysis</h4>
-                            <p>Analyzes object dependencies to determine the optimal order for reviewing and applying changes. Objects that depend on others are flagged so you can review them in the right sequence.</p>
+                            <h4>Step 8-9: Analyze Dependency</h4>
+                            <p>Analyze object dependencies to determine the optimal sequence for review.</p>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-marker"><i class="fas fa-robot"></i></div>
                         <div class="timeline-content">
-                            <h4>Step 10: AI Summary (Optional)</h4>
-                            <p>If enabled, AI generates human-readable summaries of complex changes to help you understand what changed and why it matters.</p>
+                            <h4>Step 10: Generate AI Summary (Optional)</h4>
+                            <p>AI generates summaries of complex changes to explain what changed and why.</p>
                         </div>
                     </div>
                 </div>
@@ -514,14 +514,14 @@
                     <div><h2>Understanding Classifications</h2><p class="section-subtitle">What each classification means and how to handle it</p></div>
                 </div>
                 <div class="classification-cards">
-                    <div class="classification-card safe">
+                    <div class="classification-card compatible">
                         <div class="classification-header">
-                            <span class="classification-badge classification-SAFE">SAFE</span>
-                            <span class="classification-action safe">Safe to Auto-Merge</span>
+                            <span class="classification-badge classification-COMPATIBLE">COMPATIBLE</span>
+                            <span class="classification-action compatible">Vendor Modifications</span>
                         </div>
                         <div class="classification-body">
                             <h4>What it means</h4>
-                            <p>Only the vendor made changes, or both parties made identical changes. These are safe to merge automatically.</p>
+                            <p>Appian-only or identical modifications.</p>
                             <h4>Scenarios</h4>
                             <ul>
                                 <li><strong>Vendor-only change:</strong> The vendor modified or added the object, but you didn't touch it. Accept the vendor's version.</li>
@@ -539,7 +539,7 @@
                         </div>
                         <div class="classification-body">
                             <h4>What it means</h4>
-                            <p>Both you and the vendor modified the same object differently. You need to decide how to merge these changes.</p>
+                            <p>Multiple disparate modifications to the same object.</p>
                             <h4>Why it happens</h4>
                             <ul>
                                 <li>You customized a component that the vendor also updated</li>
@@ -586,7 +586,7 @@
                         </div>
                         <div class="classification-body">
                             <h4>What it means</h4>
-                            <p>The vendor deprecated or removed an object that you had customized. This requires careful consideration.</p>
+                            <p>Appian removed an object that you had customized.</p>
                             <h4>Why it's flagged</h4>
                             <ul>
                                 <li>Vendor removed functionality you depend on</li>
@@ -609,14 +609,14 @@
         <div class="section-card" id="reviewing">
                 <div class="section-header">
                     <div class="section-icon green"><i class="fas fa-search"></i></div>
-                    <div><h2>Reviewing Changes</h2><p class="section-subtitle">Best practices for efficient change review</p></div>
+                    <div><h2>Review Changes</h2><p class="section-subtitle">Best practices for efficient change review</p></div>
                 </div>
                 <div class="review-tips">
                     <div class="tip-card">
                         <div class="tip-icon"><i class="fas fa-filter"></i></div>
                         <div class="tip-content">
                             <h4>Use Filters Effectively</h4>
-                            <p>Start by filtering to show only <strong>CONFLICT</strong> items. These need the most attention. Then move to <strong>DELETED</strong>, and finally review <strong>SAFE</strong> items.</p>
+                            <p>Start by filtering to show only <strong>CONFLICT</strong> items. These need the most attention. Then move to <strong>DELETED</strong>, and finally review <strong>COMPATIBLE</strong> items.</p>
                         </div>
                     </div>
                     <div class="tip-card">
@@ -643,15 +643,15 @@
                     <div class="tip-card">
                         <div class="tip-icon"><i class="fas fa-code"></i></div>
                         <div class="tip-content">
-                            <h4>Use Side-by-Side Comparison</h4>
-                            <p>For conflicts, use the detailed view to see both versions side by side. The diff highlighting makes it easy to spot exactly what changed.</p>
+                            <h4>Compare Side-by-Side</h4>
+                            <p>Use the detailed view to compare conflicting versions side-by-side.</p>
                         </div>
                     </div>
                     <div class="tip-card">
                         <div class="tip-icon"><i class="fas fa-users"></i></div>
                         <div class="tip-content">
-                            <h4>Collaborate with Your Team</h4>
-                            <p>For complex conflicts, involve team members who made the original customizations. They'll have context on why changes were made and how to best merge them.</p>
+                            <h4>Collaborate with Team</h4>
+                            <p>Involve team members who made the original modifications for complex conflicts.</p>
                         </div>
                     </div>
                 </div>
@@ -661,32 +661,19 @@
         <div class="section-card" id="reports">
                 <div class="section-header">
                     <div class="section-icon pink"><i class="fas fa-file-alt"></i></div>
-                    <div><h2>Generating Reports</h2><p class="section-subtitle">Export your analysis for documentation and collaboration</p></div>
+                    <div><h2>Export Reports</h2><p class="section-subtitle">Export your analysis for documentation and collaboration</p></div>
                 </div>
                 <div class="report-types">
                     <div class="report-card">
                         <div class="report-icon excel"><i class="fas fa-file-excel"></i></div>
                         <div class="report-info">
-                            <h4>Excel Report</h4>
+                            <h4>Excel</h4>
                             <p>Comprehensive spreadsheet with all changes, classifications, and metadata. Perfect for detailed analysis, filtering, and sharing with stakeholders.</p>
                             <ul class="report-features">
-                                <li>All objects with full metadata</li>
-                                <li>Classification and status columns</li>
+                                <li>Object metadata</li>
+                                <li>Classification and status</li>
                                 <li>Filterable and sortable</li>
                                 <li>Change type breakdown</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="report-card">
-                        <div class="report-icon word"><i class="fas fa-file-word"></i></div>
-                        <div class="report-info">
-                            <h4>Word Document</h4>
-                            <p>Formatted document suitable for management review and documentation. Includes executive summary and detailed change descriptions.</p>
-                            <ul class="report-features">
-                                <li>Executive summary</li>
-                                <li>Change statistics</li>
-                                <li>Detailed object descriptions</li>
-                                <li>Print-ready format</li>
                             </ul>
                         </div>
                     </div>
@@ -697,17 +684,17 @@
         <div class="section-card" id="objects">
                 <div class="section-header">
                     <div class="section-icon pink"><i class="fas fa-cubes"></i></div>
-                    <div><h2>Supported Object Types</h2><p class="section-subtitle">Appian objects that MergeAssist can analyze and compare</p></div>
+                    <div><h2>Supported Objects</h2><p class="section-subtitle">Analyze and compare these Appian objects</p></div>
                 </div>
                 <p class="object-types-intro">MergeAssist supports most Appian object types for detailed comparison and merge analysis. Some objects are not supported as of now.</p>
                 <div class="object-types-grid">
                     <div class="object-type-card supported">
                         <div class="object-type-header">
-                            <div><h4>Supported Objects</h4></div>
+                            <div><h4>Fully Analyzed</h4></div>
                             <div><span class="object-type-count">15 types</span></div>
                         </div>
                         <div class="object-type-body">
-                            <p>These object types are fully analyzed with detailed comparison views:</p>
+                            <p>Use detailed comparison views to analyze these objects:</p>
                             <div class="object-list">
                                 <div class="object-item"><i class="fas fa-window-maximize"></i><span>Interface</span></div>
                                 <div class="object-item"><i class="fas fa-function"></i><span>Expression Rule</span></div>
@@ -729,7 +716,7 @@
                     </div>
                     <div class="object-type-card excluded">
                         <div class="object-type-header">
-                            <div><h4>Excluded Objects</h4></div>
+                            <div><h4>Skipped During Analysis</h4></div>
                             <div><span class="object-type-count">8 types</span></div>
                         </div>
                         <div class="object-type-body">
@@ -750,9 +737,9 @@
                 <div class="object-types-note">
                     <i class="fas fa-info-circle"></i>
                     <div>
-                        <strong>Why are some objects excluded?</strong>
-                        <p>Excluded objects are typically containers (folders), binary files (documents), or specialized objects that don't benefit from text-based merge analysis. These objects are better handled through Appian's native import process.</p>
-                        <p style="margin-top:0.75rem;color:var(--accent-secondary);font-weight:500;"><i class="fas fa-road"></i> Support for these object types is planned for future versions.</p>
+                        <strong>Excluded Objects</strong>
+                        <p>Containers, binary files, and specialized objects are skipped. Use Appian's native import process for these objects.</p>
+                        <p style="margin-top:0.75rem;color:var(--accent-secondary);font-weight:500;"><i class="fas fa-road"></i> Support for these objects is planned for future versions</p>
                     </div>
                 </div>
         </div>
@@ -761,15 +748,15 @@
         <div class="section-card" id="faq">
                 <div class="section-header">
                     <div class="section-icon purple"><i class="fas fa-question-circle"></i></div>
-                    <div><h2>Frequently Asked Questions</h2><p class="section-subtitle">Quick answers to common questions</p></div>
+                    <div><h2>FAQ</h2><p class="section-subtitle">Quick answers to common questions</p></div>
                 </div>
                 <div class="faq-list">
                     <div class="faq-item">
-                        <button class="faq-question"><span>What file formats are supported for upload?</span><i class="fas fa-chevron-down"></i></button>
+                        <button class="faq-question"><span>Supported file formats</span><i class="fas fa-chevron-down"></i></button>
                         <div class="faq-answer"><p>MergeAssist accepts standard Appian export packages in ZIP format. These are the same files you get when exporting applications from Appian Designer.</p></div>
                     </div>
                     <div class="faq-item">
-                        <button class="faq-question"><span>How long does analysis take?</span><i class="fas fa-chevron-down"></i></button>
+                        <button class="faq-question"><span>Analysis Duration</span><i class="fas fa-chevron-down"></i></button>
                         <div class="faq-answer"><p>Analysis time depends on package size. Small packages (under 100 objects) typically complete in under a minute. Large packages (500+ objects) may take several minutes. You'll see a progress indicator during processing.</p></div>
                     </div>
                     <div class="faq-item">
@@ -800,7 +787,7 @@
                         <div class="faq-answer"><p>MergeAssist uses SHA-512 diff hashes to compare content. This is the same approach Appian uses internally. Two objects with the same diff hash have identical content, even if they have different version UUIDs or timestamps.</p></div>
                     </div>
                     <div class="faq-item">
-                        <button class="faq-question"><span>What does the AI summary feature do?</span><i class="fas fa-chevron-down"></i></button>
+                        <button class="faq-question"><span>AI summary feature</span><i class="fas fa-chevron-down"></i></button>
                         <div class="faq-answer"><p>When enabled in Settings, AI generates human-readable summaries of complex changes. This helps you quickly understand what changed without reading through all the code. The feature is optional and can be disabled if not needed.</p></div>
                     </div>
                     <div class="faq-item">
@@ -815,8 +802,8 @@
             <div class="support-card">
                 <div class="support-icon"><i class="fas fa-life-ring"></i></div>
                 <div class="support-content">
-                    <h3>Need More Help?</h3>
-                    <p>If you have questions not covered here or encounter any issues, reach out to your system administrator or the development team for assistance.</p>
+                    <h3>Contact Us</h3>
+                    <p>If you have questions not covered here or encounter any issues, contact an admin or the development team.</p>
                 </div>
             </div>
         </div>
