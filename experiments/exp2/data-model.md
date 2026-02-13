@@ -62,9 +62,7 @@ Stores the overall AI-computed metrics and summary for each vendor within an eva
 | `overallScore` | Decimal (5,4) | Yes | Weighted sum of per-factor scores (0–1 range) |
 | `fitment` | Integer (FK → `AS_GSS_R_DATA.id`) | Yes | Reference data: `STRONG`, `MODERATE`, `WEAK` |
 | `confidenceScore` | Decimal (5,4) | Yes | Weighted average of per-factor AI confidence scores |
-| `totalHighlights` | Integer | Yes | Aggregate count of Highlight findings across all factors |
-| `totalRisks` | Integer | Yes | Aggregate count of Risk findings across all factors |
-| `totalObservations` | Integer | Yes | Aggregate count of Observation findings across all factors |
+| `documentCount` | Integer | Yes | Number of documents analysed for this vendor (displayed in UI header) |
 | `analysisStatus` | Integer (FK → `AS_GSS_R_DATA.id`) | No | Reference data: `PENDING`, `IN_PROGRESS`, `COMPLETED`, `FAILED`, `REGENERATING` |
 | `lastGeneratedOn` | Timestamp | Yes | When the analysis was last completed |
 | `createdBy` | Text (255) | No | Creator |
@@ -91,9 +89,7 @@ Stores the AI analysis results per vendor-factor combination. One record per ven
 | `factorScore` | Decimal (5,4) | Yes | Score: 1 (Strong), 0.6 (Moderate), 0.25 (Weak) |
 | `factorFitment` | Integer (FK → `AS_GSS_R_DATA.id`) | Yes | Reference data: `STRONG`, `MODERATE`, `WEAK` |
 | `factorConfidence` | Decimal (5,4) | Yes | Average AI confidence for findings in this factor (0–1) |
-| `highlightCount` | Integer | Yes | Count of Highlight findings for this factor |
-| `riskCount` | Integer | Yes | Count of Risk findings for this factor |
-| `observationCount` | Integer | Yes | Count of Observation findings for this factor |
+
 | `extractionId` | Integer (FK → `AS_GSS_VendorAnalysisExtraction.id`) | Yes | Link to the extraction job that produced this analysis |
 | `createdBy` | Text (255) | No | Creator |
 | `createdOn` | Timestamp | No | Creation timestamp |
@@ -244,6 +240,7 @@ Following the existing `AS_GSS_A_R_{Name}` / `AS_GSS_A_R_{Name}_Field` pattern, 
 │  - overallScore         │                   │
 │  - fitment              │                   │
 │  - confidenceScore      │                   │
+│  - documentCount        │                   │
 │  - analysisStatus       │                   │
 └──────────┬──────────────┘                   │
            │ 1                                │
@@ -255,7 +252,6 @@ Following the existing `AS_GSS_A_R_{Name}` / `AS_GSS_A_R_{Name}_Field` pattern, 
 │  - factorSummary                                │
 │  - factorScore / factorFitment                  │
 │  - factorConfidence                             │
-│  - highlightCount / riskCount / observationCount│
 └──────────┬──────────────────────────────────────┘
            │ 1
            │
